@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1>Employee Management Dashboard</h1>
+
+  <canvas id="deptChart" width="400" height="200"></canvas>
+  <canvas id="perfChart" width="400" height="200"></canvas>
+  <canvas id="attendanceChart" width="400" height="200"></canvas>
+
+  <script>
+    // Department Employee Count Chart
+    const deptChart = new Chart(document.getElementById('deptChart'), {
+      type: 'bar',
+      data: {
+        labels: {{ dept_data|pluck:"name"|safe }},
+        datasets: [{
+          label: 'Employees per Department',
+          data: {{ dept_data|pluck:"emp_count"|safe }},
+          backgroundColor: 'rgba(54, 162, 235, 0.6)'
+        }]
+      }
+    });
+
+    // Average Performance per Department
+    const perfChart = new Chart(document.getElementById('perfChart'), {
+      type: 'bar',
+      data: {
+        labels: {{ perf_data|pluck:"employee__department__name"|safe }},
+        datasets: [{
+          label: 'Average Performance Score',
+          data: {{ perf_data|pluck:"avg_score"|safe }},
+          backgroundColor: 'rgba(255, 99, 132, 0.6)'
+        }]
+      }
+    });
+
+    // Top 5 Attendance
+    const attendanceChart = new Chart(document.getElementById('attendanceChart'), {
+      type: 'bar',
+      data: {
+        labels: {{ attendance_data|pluck:"employee__name"|safe }},
+        datasets: [{
+          label: 'Days Present',
+          data: {{ attendance_data|pluck:"days_present"|safe }},
+          backgroundColor: 'rgba(75, 192, 192, 0.6)'
+        }]
+      }
+    });
+  </script>
+</body>
+</html>
