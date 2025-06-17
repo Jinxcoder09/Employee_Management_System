@@ -21,7 +21,6 @@ from employees.views import EmployeeViewSet, DepartmentViewSet
 from attendance.views import AttendanceViewSet
 from performance.views import PerformanceViewSet
 from rest_framework.authtoken.views import obtain_auth_token
-from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework.permissions import AllowAny
