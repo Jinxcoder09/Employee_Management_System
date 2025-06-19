@@ -1,12 +1,10 @@
 from django.shortcuts import render
-
-# Create your views here.
 from rest_framework import viewsets
 from .serializers import AttendanceSerializer
-from employees.models import Employee, Department, Performance
+from employees.models import  Department, Performance
 from .models import Attendance
-
 from django.db.models import Count, Avg
+# Create your views here.
 def dashboard(request):
     # Example: Count of employees per department
     dept_counts = Department.objects.annotate(count=Count('employee'))

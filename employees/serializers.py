@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from .models import Employee, Department
-from attendance.models import Attendance
-from performance.models import Performance
+
 
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
