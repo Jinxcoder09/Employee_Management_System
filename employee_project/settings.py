@@ -12,7 +12,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # Security settings
 SECRET_KEY = env('SECRET_KEY', default='unsafe-secret-key')  # Replace with env var
 DEBUG = env.bool('DEBUG', default=False)
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'])  # You can specify Railway URL here
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['employee_management_system.railway.internal'])  # You can specify Railway URL here
 
 # Application definition
 INSTALLED_APPS = [
