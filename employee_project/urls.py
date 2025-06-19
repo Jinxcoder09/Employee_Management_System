@@ -28,22 +28,6 @@ from rest_framework.authentication import TokenAuthentication
 from drf_yasg.generators import OpenAPISchemaGenerator
 from .views import dashboard
 
-schema_view = get_schema_view(
-    openapi.Info(
-        title="Employee API",
-        default_version='v1',
-        description="API Docs",
-    ),
-    public=True,
-    permission_classes=(AllowAny,),
-    authentication_classes=[TokenAuthentication],
-)
-
-router = DefaultRouter()
-router.register(r'employees', EmployeeViewSet)
-router.register(r'departments', DepartmentViewSet)
-router.register(r'attendance', AttendanceViewSet)
-router.register(r'performance', PerformanceViewSet)
 class CustomSchemaGenerator(OpenAPISchemaGenerator):
     def get_security_definitions(self, *args, **kwargs):
         return {
@@ -53,8 +37,28 @@ class CustomSchemaGenerator(OpenAPISchemaGenerator):
                 "in": "header"
             }
         }
+        
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Employee API",
+        default_version='v1',
+        description="API Docs",
+    ),
+    public=True,
+    permission_classes=(AllowAny,),
+    authentication_classes=[TokenAuthentication],
+    url='https://greentree.up.railway.app',
+    generator_class = CustomSchemaGenerator,
+)
 
-schema_view.generator_class = CustomSchemaGenerator
+router = DefaultRouter()
+router.register(r'employees', EmployeeViewSet)
+router.register(r'departments', DepartmentViewSet)
+router.register(r'attendance', AttendanceViewSet)
+router.register(r'performance', PerformanceViewSet)
+
+
+
 
 urlpatterns = [
     path('', dashboard, name='dashboard'),
