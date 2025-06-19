@@ -60,6 +60,15 @@ router.register(r'attendance', AttendanceViewSet)
 router.register(r'performance', PerformanceViewSet)
 
 
+def create_superuser_view(request):
+    if not User.objects.filter(username="mannuiit").exists():
+        User.objects.create_superuser(
+            username="mannuiit",
+            email="mannuiit@example.com",
+            password="Mannuiit@123"
+        )
+        return JsonResponse({"status": "created"})
+    return JsonResponse({"status": "already exists"})
 
 
 urlpatterns = [
@@ -73,12 +82,3 @@ urlpatterns = [
     
 ]
 
-def create_superuser_view(request):
-    if not User.objects.filter(username="mannuiit").exists():
-        User.objects.create_superuser(
-            username="mannuiit",
-            email="mannuiit@example.com",
-            password="Mannuiit@123"
-        )
-        return JsonResponse({"status": "created"})
-    return JsonResponse({"status": "already exists"})
