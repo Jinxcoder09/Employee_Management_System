@@ -14,6 +14,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.contrib.auth.models import User
+from django.http import JsonResponse
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
@@ -67,5 +69,16 @@ urlpatterns = [
     path('api-token-auth/', obtain_auth_token),  # for Token Auth
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path("create-superuser/", create_superuser_view),
     
 ]
+
+def create_superuser_view(request):
+    if not User.objects.filter(username="mannuiit").exists():
+        User.objects.create_superuser(
+            username="mannuiit",
+            email="mannuiit@example.com",
+            password="Mannuiit@123"
+        )
+        return JsonResponse({"status": "created"})
+    return JsonResponse({"status": "already exists"})
