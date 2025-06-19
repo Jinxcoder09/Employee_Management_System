@@ -57,7 +57,7 @@ class CustomSchemaGenerator(OpenAPISchemaGenerator):
 schema_view.generator_class = CustomSchemaGenerator
 
 urlpatterns = [
-    path('dashboard/', dashboard, name='dashboard'),
+    path('', dashboard, name='dashboard'),
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api-token-auth/', obtain_auth_token),  # for Token Auth
