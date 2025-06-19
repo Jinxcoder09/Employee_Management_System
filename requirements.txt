@@ -8,3 +8,4 @@ django-filter
 drf-yasg
 psycopg2-binary
 Faker
+django-cors-headers
