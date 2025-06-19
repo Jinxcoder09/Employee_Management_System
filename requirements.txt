@@ -1,0 +1,10 @@
+Django==5.2.2
+gunicorn
+whitenoise
+dj-database-url
+django-environ
+djangorestframework
+django-filter
+drf-yasg
+psycopg2-binary
+Faker
