@@ -107,6 +107,9 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://greentree.up.railway.app",
+]
 CORS_ALLOWED_ORIGINS = [
     "https://greentree.up.railway.app",
 ]
