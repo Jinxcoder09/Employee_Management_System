@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- HEAD SECTION REMAINS THE SAME -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employee Management Dashboard</title>
     <style>
-        /* STYLES REMAIN THE SAME */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -63,11 +61,11 @@
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            min-height: 400px; /* Fixed height for all cards */
+            min-height: 400px;
         }
         .chart-container {
             width: 100%;
-            height: 300px; /* Fixed height for charts */
+            height: 300px;
             position: relative;
         }
         canvas {
@@ -92,6 +90,16 @@
             color: #5f6a7b;
             margin-bottom: 30px;
         }
+        .chart-card ul li a {
+            text-decoration: none;
+            color: #1a5276;
+            font-weight: 500;
+            font-size: 1.05em;
+        }
+        .chart-card ul li a:hover {
+            color: #21618c;
+            text-decoration: underline;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -99,11 +107,23 @@
     <div class="container">
         <h1>Dashboard</h1>
 
-        <p>
-            Below are key insights into your workforce's departments, performance, and attendance trends.
-        </p>
+        <!-- 🔗 Navigation Section -->
+        <div class="chart-card">
+            <h2>🔗 Quick Navigation</h2>
+            <ul style="list-style: none; padding: 0; text-align: center;">
+                <li><a href="/admin/" target="_blank">🛠️ Admin Panel</a></li>
+                <li><a href="/api/" target="_blank">🧩 API Root</a></li>
+                <li><a href="/api-token-auth/" target="_blank">🔑 Token Auth (Login)</a></li>
+                <li><a href="/swagger/" target="_blank">📘 Swagger Docs</a></li>
+                <li><a href="/redoc/" target="_blank">📙 Redoc Docs</a></li>
+                <li><a href="/create-superuser/" target="_blank">👤 Create Superuser</a></li>
+            </ul>
+        </div>
+
+        <p>Below are key insights into your workforce's departments, performance, and attendance trends.</p>
 
         <div class="chart-grid">
+            <!-- Chart 1 -->
             <div class="chart-card">
                 <h2>Employees per Department</h2>
                 {% if dept_labels_json and dept_labels_json|length > 2 %}
@@ -115,6 +135,7 @@
                 {% endif %}
             </div>
 
+            <!-- Chart 2 -->
             <div class="chart-card">
                 <h2>Monthly Attendance Overview</h2>
                 {% if monthly_att_labels_json and monthly_att_labels_json|length > 2 %}
@@ -126,6 +147,7 @@
                 {% endif %}
             </div>
 
+            <!-- Chart 3 -->
             <div class="chart-card">
                 <h2>Average Performance Scores by Department</h2>
                 {% if perf_labels_json and perf_labels_json|length > 2 %}
@@ -137,6 +159,7 @@
                 {% endif %}
             </div>
 
+            <!-- Chart 4 -->
             <div class="chart-card">
                 <h2>Top 5 Employees by Recorded Attendance Days</h2>
                 {% if att_labels_json and att_labels_json|length > 2 %}
@@ -151,13 +174,11 @@
     </div>
 
     <script>
-        // Store chart instances globally to manage them
         let deptChartInstance = null;
         let monthlyAttChartInstance = null;
         let perfChartInstance = null;
         let attChartInstance = null;
 
-        // Data from Django context - parsing JSON strings directly
         const deptLabels = JSON.parse('{{ dept_labels_json|safe }}');
         const deptCounts = JSON.parse('{{ dept_counts_json|safe }}');
 
@@ -170,7 +191,6 @@
         const attLabels = JSON.parse('{{ att_labels_json|safe }}');
         const attCounts = JSON.parse('{{ att_counts_json|safe }}');
 
-        // Common Chart.js options for responsiveness and tooltips
         const commonChartOptions = {
             responsive: true,
             maintainAspectRatio: false,
@@ -187,12 +207,11 @@
             }
         };
 
-        // Function to create a PIE chart
         function createPieChart(ctxId, labels, data, labelText, backgroundColors, borderColors) {
             const ctx = document.getElementById(ctxId);
-            if (!ctx) { console.warn(`Canvas element with ID '${ctxId}' not found.`); return; }
-            if (deptChartInstance) { deptChartInstance.destroy(); }
-            
+            if (!ctx) return;
+            if (deptChartInstance) deptChartInstance.destroy();
+
             deptChartInstance = new Chart(ctx, {
                 type: 'pie',
                 data: {
@@ -212,52 +231,22 @@
                         legend: {
                             display: true,
                             position: 'right',
-                            labels: {
-                                boxWidth: 20,
-                                padding: 15
-                            }
+                            labels: { boxWidth: 20, padding: 15 }
                         }
                     }
                 }
             });
         }
 
-        // Function to create a BAR chart with fixed sizing
         function createBarChart(ctxId, labels, data, labelText, backgroundColor, borderColor, yAxisMax = null, instanceVarName) {
             const ctx = document.getElementById(ctxId);
-            if (!ctx) { console.warn(`Canvas element with ID '${ctxId}' not found.`); return; }
+            if (!ctx) return;
 
-            // Destroy existing instance if it exists
             switch (instanceVarName) {
-                case 'monthlyAttChartInstance': 
-                    if (monthlyAttChartInstance) monthlyAttChartInstance.destroy(); 
-                    break;
-                case 'perfChartInstance':       
-                    if (perfChartInstance) perfChartInstance.destroy(); 
-                    break;
-                case 'attChartInstance':        
-                    if (attChartInstance) attChartInstance.destroy(); 
-                    break;
+                case 'monthlyAttChartInstance': if (monthlyAttChartInstance) monthlyAttChartInstance.destroy(); break;
+                case 'perfChartInstance': if (perfChartInstance) perfChartInstance.destroy(); break;
+                case 'attChartInstance': if (attChartInstance) attChartInstance.destroy(); break;
             }
-
-            const chartOptions = {
-                ...commonChartOptions,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: { precision: 0 },
-                        max: yAxisMax,
-                        grid: { color: 'rgba(0, 0, 0, 0.08)' }
-                    },
-                    x: {
-                        grid: { color: 'rgba(0, 0, 0, 0.08)' }
-                    }
-                },
-                plugins: {
-                    ...commonChartOptions.plugins,
-                    legend: { display: false }
-                }
-            };
 
             const newChart = new Chart(ctx, {
                 type: 'bar',
@@ -272,10 +261,23 @@
                         borderRadius: 5
                     }]
                 },
-                options: chartOptions
+                options: {
+                    ...commonChartOptions,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { precision: 0 },
+                            max: yAxisMax,
+                            grid: { color: 'rgba(0, 0, 0, 0.08)' }
+                        },
+                        x: {
+                            grid: { color: 'rgba(0, 0, 0, 0.08)' }
+                        }
+                    },
+                    plugins: { ...commonChartOptions.plugins, legend: { display: false } }
+                }
             });
 
-            // Assign the new chart instance
             switch (instanceVarName) {
                 case 'monthlyAttChartInstance': monthlyAttChartInstance = newChart; break;
                 case 'perfChartInstance': perfChartInstance = newChart; break;
@@ -283,80 +285,31 @@
             }
         }
 
-        // Color palettes for charts
         const primaryColors = [
-            'rgba(60, 141, 188, 0.8)',
-            'rgba(243, 156, 18, 0.8)',
-            'rgba(0, 166, 90, 0.8)',
-            'rgba(221, 75, 57, 0.8)',
-            'rgba(108, 92, 231, 0.8)',
-            'rgba(255, 99, 132, 0.8)',
-            'rgba(54, 162, 235, 0.8)',
-            'rgba(255, 206, 86, 0.8)'
+            'rgba(60, 141, 188, 0.8)', 'rgba(243, 156, 18, 0.8)', 'rgba(0, 166, 90, 0.8)',
+            'rgba(221, 75, 57, 0.8)', 'rgba(108, 92, 231, 0.8)', 'rgba(255, 99, 132, 0.8)',
+            'rgba(54, 162, 235, 0.8)', 'rgba(255, 206, 86, 0.8)'
         ];
         const borderColors = [
-            'rgba(60, 141, 188, 1)',
-            'rgba(243, 156, 18, 1)',
-            'rgba(0, 166, 90, 1)',
-            'rgba(221, 75, 57, 1)',
-            'rgba(108, 92, 231, 1)',
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)'
+            'rgba(60, 141, 188, 1)', 'rgba(243, 156, 18, 1)', 'rgba(0, 166, 90, 1)',
+            'rgba(221, 75, 57, 1)', 'rgba(108, 92, 231, 1)', 'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)'
         ];
 
-        // --- Chart 1: Employees per Department (PIE CHART) ---
         if (deptLabels.length > 0 && deptCounts.length > 0) {
-            createPieChart(
-                'deptChart',
-                deptLabels,
-                deptCounts,
-                'Number of Employees',
-                primaryColors,
-                borderColors
-            );
+            createPieChart('deptChart', deptLabels, deptCounts, 'Number of Employees', primaryColors, borderColors);
         }
 
-        // --- Chart 2: Monthly Attendance Overview (BAR CHART) ---
         if (monthlyAttLabels.length > 0 && monthlyAttCounts.length > 0) {
-            createBarChart(
-                'monthlyAttChart',
-                monthlyAttLabels,
-                monthlyAttCounts,
-                'Total Attendance',
-                'rgba(243, 156, 18, 0.8)',
-                'rgba(243, 156, 18, 1)',
-                null,
-                'monthlyAttChartInstance'
-            );
+            createBarChart('monthlyAttChart', monthlyAttLabels, monthlyAttCounts, 'Total Attendance', 'rgba(243, 156, 18, 0.8)', 'rgba(243, 156, 18, 1)', null, 'monthlyAttChartInstance');
         }
 
-        // --- Chart 3: Average Performance Scores by Department (BAR CHART) ---
         if (perfLabels.length > 0 && perfScores.length > 0) {
-            createBarChart(
-                'perfChart',
-                perfLabels,
-                perfScores,
-                'Average Rating',
-                'rgba(0, 166, 90, 0.8)',
-                'rgba(0, 166, 90, 1)',
-                5,
-                'perfChartInstance'
-            );
+            createBarChart('perfChart', perfLabels, perfScores, 'Average Rating', 'rgba(0, 166, 90, 0.8)', 'rgba(0, 166, 90, 1)', 5, 'perfChartInstance');
         }
 
-        // --- Chart 4: Top 5 Employees by Recorded Attendance Days (BAR CHART) ---
         if (attLabels.length > 0 && attCounts.length > 0) {
-            createBarChart(
-                'attChart',
-                attLabels,
-                attCounts,
-                'Days Recorded',
-                'rgba(108, 92, 231, 0.8)',
-                'rgba(108, 92, 231, 1)',
-                null,
-                'attChartInstance'
-            );
+            createBarChart('attChart', attLabels, attCounts, 'Days Recorded', 'rgba(108, 92, 231, 0.8)', 'rgba(108, 92, 231, 1)', null, 'attChartInstance');
         }
     </script>
 </body>
