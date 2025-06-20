@@ -5,7 +5,406 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Employee Management Dashboard</title>
     <style>
+        /* Reset some margin/padding for body */<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Employee Management Dashboard</title>
+    <style>
         /* Reset some margin/padding for body */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 80px 20px 20px 20px; /* top padding for navbar */
+            background-color: #e9f2f9;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* NAVBAR */
+        nav {
+            background-color: #1a5276;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+            font-weight: 600;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .nav-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        nav ul li {
+            display: flex;
+            align-items: center;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.95em;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            white-space: nowrap;
+        }
+
+        nav ul li a:hover,
+        nav ul li a:focus {
+            background-color: #21618c;
+            color: #e9f2f9;
+            text-decoration: none;
+        }
+
+        /* Responsive: On small screens, make navbar items wrap */
+        @media (max-width: 900px) {
+            nav {
+                height: auto;
+                padding: 10px;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            nav ul {
+                gap: 5px;
+                justify-content: center;
+            }
+            
+            nav ul li a {
+                padding: 6px 8px;
+                font-size: 0.85em;
+            }
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #1a5276;
+            text-align: center;
+            margin-bottom: 35px;
+            font-size: 2.8em;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        h2 {
+            color: #2874a6;
+            text-align: center;
+            margin-top: 35px;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+            border-bottom: 2px solid #d4e6f1;
+            padding-bottom: 10px;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 30px;
+            justify-content: center;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .chart-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+
+        .chart-card {
+            background-color: #fefefe;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 400px;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            position: relative;
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .no-data-message {
+            text-align: center;
+            color: #7f8c8d;
+            margin-top: 20px;
+            font-style: italic;
+            padding: 15px;
+            background-color: #ebf5fb;
+            border-radius: 8px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #cce5ff;
+        }
+
+        p {
+            text-align: center;
+            font-size: 1.05em;
+            color: #5f6a7b;
+            margin-bottom: 30px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <ul>
+                <li><a href="/" title="Dashboard">🏠 Dashboard</a></li>
+                <li><a href="/admin/" target="_blank" title="Admin Panel">🛠️ Admin Panel</a></li>
+                <li><a href="/api/" target="_blank" title="API Root">🧩 API Root</a></li>
+                <li><a href="/api-token-auth/" target="_blank" title="Token Auth (Login)">🔑 Token Auth</a></li>
+                <li><a href="/swagger/" target="_blank" title="Swagger Docs">📘 Swagger Docs</a></li>
+                <li><a href="/redoc/" target="_blank" title="Redoc Docs">📙 Redoc Docs</a></li>
+                <li><a href="/create-superuser/" target="_blank" title="Create Superuser">👤 Create Superuser</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Dashboard</h1>
+
+        <p>Below are key insights into your workforce's departments, performance, and attendance trends.</p>
+
+        <div class="chart-grid">
+            <!-- Chart 1 -->
+            <div class="chart-card">
+                <h2>Employees per Department</h2>
+                {% if dept_labels_json and dept_labels_json|length > 2 %}
+                    <div class="chart-container">
+                        <canvas id="deptChart"></canvas>
+                    </div>
+                {% else %}
+                    <p class="no-data-message">No department data available. Please add departments and employees.</p>
+                {% endif %}
+            </div>
+
+            <!-- Chart 2 -->
+            <div class="chart-card">
+                <h2>Monthly Attendance Overview</h2>
+                {% if monthly_att_labels_json and monthly_att_labels_json|length > 2 %}
+                    <div class="chart-container">
+                        <canvas id="monthlyAttChart"></canvas>
+                    </div>
+                {% else %}
+                    <p class="no-data-message">No monthly attendance data available. Please add employee attendance records.</p>
+                {% endif %}
+            </div>
+
+            <!-- Chart 3 -->
+            <div class="chart-card">
+                <h2>Average Performance Scores by Department</h2>
+                {% if perf_labels_json and perf_labels_json|length > 2 %}
+                    <div class="chart-container">
+                        <canvas id="perfChart"></canvas>
+                    </div>
+                {% else %}
+                    <p class="no-data-message">No performance data available. Please add employee performance records.</p>
+                {% endif %}
+            </div>
+
+            <!-- Chart 4 -->
+            <div class="chart-card">
+                <h2>Top 5 Employees by Recorded Attendance Days</h2>
+                {% if att_labels_json and att_labels_json|length > 2 %}
+                    <div class="chart-container">
+                        <canvas id="attChart"></canvas>
+                    </div>
+                {% else %}
+                    <p class="no-data-message">No attendance data available. Please add employee attendance records.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let deptChartInstance = null;
+        let monthlyAttChartInstance = null;
+        let perfChartInstance = null;
+        let attChartInstance = null;
+
+        const deptLabels = JSON.parse('{{ dept_labels_json|safe }}');
+        const deptCounts = JSON.parse('{{ dept_counts_json|safe }}');
+
+        const monthlyAttLabels = JSON.parse('{{ monthly_att_labels_json|safe }}');
+        const monthlyAttCounts = JSON.parse('{{ monthly_att_counts_json|safe }}');
+
+        const perfLabels = JSON.parse('{{ perf_labels_json|safe }}');
+        const perfScores = JSON.parse('{{ perf_scores_json|safe }}');
+
+        const attLabels = JSON.parse('{{ att_labels_json|safe }}');
+        const attCounts = JSON.parse('{{ att_counts_json|safe }}');
+
+        const commonChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: 'rgba(0,0,0,0.7)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    borderColor: 'rgba(255,255,255,0.2)',
+                    borderWidth: 1,
+                    cornerRadius: 4
+                }
+            }
+        };
+
+        function createPieChart(ctxId, labels, data, labelText, backgroundColors, borderColors) {
+            const ctx = document.getElementById(ctxId);
+            if (!ctx) return;
+            if (deptChartInstance) deptChartInstance.destroy();
+
+            deptChartInstance = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: labelText,
+                        data: data,
+                        backgroundColor: backgroundColors,
+                        borderColor: borderColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    ...commonChartOptions,
+                    plugins: {
+                        ...commonChartOptions.plugins,
+                        legend: {
+                            display: true,
+                            position: 'right',
+                            labels: { boxWidth: 20, padding: 15 }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createBarChart(ctxId, labels, data, labelText, backgroundColor, borderColor, yAxisMax = null, instanceVarName) {
+            const ctx = document.getElementById(ctxId);
+            if (!ctx) return;
+
+            switch (instanceVarName) {
+                case 'monthlyAttChartInstance': if (monthlyAttChartInstance) monthlyAttChartInstance.destroy(); break;
+                case 'perfChartInstance': if (perfChartInstance) perfChartInstance.destroy(); break;
+                case 'attChartInstance': if (attChartInstance) attChartInstance.destroy(); break;
+            }
+
+            const newChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: labelText,
+                        data: data,
+                        backgroundColor: backgroundColor,
+                        borderColor: borderColor,
+                        borderWidth: 1,
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    ...commonChartOptions,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { precision: 0 },
+                            max: yAxisMax,
+                            grid: { color: 'rgba(0, 0, 0, 0.08)' }
+                        },
+                        x: {
+                            grid: { color: 'rgba(0, 0, 0, 0.08)' }
+                        }
+                    },
+                    plugins: { ...commonChartOptions.plugins, legend: { display: false } }
+                }
+            });
+
+            switch (instanceVarName) {
+                case 'monthlyAttChartInstance': monthlyAttChartInstance = newChart; break;
+                case 'perfChartInstance': perfChartInstance = newChart; break;
+                case 'attChartInstance': attChartInstance = newChart; break;
+            }
+        }
+
+        const primaryColors = [
+            'rgba(60, 141, 188, 0.8)', 'rgba(243, 156, 18, 0.8)', 'rgba(0, 166, 90, 0.8)',
+            'rgba(221, 75, 57, 0.8)', 'rgba(108, 92, 231, 0.8)', 'rgba(255, 99, 132, 0.8)',
+            'rgba(54, 162, 235, 0.8)', 'rgba(255, 206, 86, 0.8)'
+        ];
+        const borderColors = [
+            'rgba(60, 141, 188, 1)', 'rgba(243, 156, 18, 1)', 'rgba(0, 166, 90, 1)',
+            'rgba(221, 75, 57, 1)', 'rgba(108, 92, 231, 1)', 'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)'
+        ];
+
+        if (deptLabels.length > 0 && deptCounts.length > 0) {
+            createPieChart('deptChart', deptLabels, deptCounts, 'Number of Employees', primaryColors, borderColors);
+        }
+
+        if (monthlyAttLabels.length > 0 && monthlyAttCounts.length > 0) {
+            createBarChart('monthlyAttChart', monthlyAttLabels, monthlyAttCounts, 'Total Attendance', 'rgba(243, 156, 18, 0.8)', 'rgba(243, 156, 18, 1)', null, 'monthlyAttChartInstance');
+        }
+
+        if (perfLabels.length > 0 && perfScores.length > 0) {
+            createBarChart('perfChart', perfLabels, perfScores, 'Average Rating', 'rgba(0, 166, 90, 0.8)', 'rgba(0, 166, 90, 1)', 5, 'perfChartInstance');
+        }
+
+        if (attLabels.length > 0 && attCounts.length > 0) {
+            createBarChart('attChart', attLabels, attCounts, 'Days Recorded', 'rgba(108, 92, 231, 0.8)', 'rgba(108, 92, 231, 1)', null, 'attChartInstance');
+        }
+    </script>
+</body>
+</html>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
