@@ -120,8 +120,8 @@ Set the following Railway environment variables:
 SECRET_KEY=your-secret
 DEBUG=False
 ALLOWED_HOSTS=your-app.up.railway.app
-CORS_ALLOWED_ORIGINS=https://your-app.up.railway.app
-CSRF_TRUSTED_ORIGINS=https://your-app.up.railway.app
+CORS_ALLOWED_ORIGINS=https://greentree.up.railway.app
+CSRF_TRUSTED_ORIGINS=https://greentree.up.railway.app
 DATABASE_URL=postgres://user:pass@host:port/dbname
 Push to Railway via GitHub or CLI
 
