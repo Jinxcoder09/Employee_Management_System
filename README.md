@@ -58,18 +58,18 @@ This system provides:
 
 ### 1. Clone the repository
 
-```bash
+
 git clone https://github.com/Jinxcoder09/Employee_Management_System.git
 cd Employee_Management_System
-2. Create a virtual environment
 
+2. Create a virtual environment
 python -m venv venv
 source venv/bin/activate  # or venv\Scripts\activate on Windows
+
 3. Install dependencies
-
 pip install -r requirements.txt
-4. Add a .env file at the root
 
+4. Add a .env file at the root
 SECRET_KEY=your-secret-key
 DEBUG=True
 ALLOWED_HOSTS=127.0.0.1,localhost
@@ -97,7 +97,7 @@ Path	Description
 /redoc/	Redoc API documentation
 /create-superuser/	Auto-creates a default admin user
 
-📊 Dashboard Visualizations
+##📊 Dashboard Visualizations
 Accessible at /, includes:
 
 Pie Chart: Employees per department
@@ -108,7 +108,7 @@ Bar Chart: Average performance by department
 
 Bar Chart: Top 5 employees by attendance
 
-☁️ Deployment on Railway
+##☁️ Deployment on Railway
 🧰 Railway Setup
 Create a Railway project
 
@@ -127,7 +127,7 @@ Push to Railway via GitHub or CLI
 
 Railway auto-detects build and run steps via Nixpacks
 
-🔥 Production Commands
+##🔥 Production Commands
 
 python manage.py migrate
 python manage.py collectstatic --noinput
@@ -146,10 +146,10 @@ curl https://greentree.up.railway.app/create-superuser/
 
 ✅ Lock down /create-superuser/ or remove after use
 
-📸 Screenshots
+##📸 Screenshots
 Add screenshots here once you host the dashboard.
 
-👨‍💻 Author
+##👨‍💻 Author
 Manish Kumar
 GitHub: @Jinxcoder09
 
