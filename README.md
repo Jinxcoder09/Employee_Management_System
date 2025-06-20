@@ -147,10 +147,12 @@ curl https://greentree.up.railway.app/create-superuser/
 ✅ Lock down /create-superuser/ or remove after use
 
 ## 📸 Screenshots
+
 Add screenshots here once you host the dashboard.
 
 ## 👨‍💻 Author
 Manish Kumar
+
 GitHub: @Jinxcoder09
 
 
