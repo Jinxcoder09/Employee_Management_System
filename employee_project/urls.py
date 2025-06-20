@@ -59,7 +59,7 @@ router.register(r'departments', DepartmentViewSet)
 router.register(r'attendance', AttendanceViewSet)
 router.register(r'performance', PerformanceViewSet)
 
-@csrf_exempt
+
 def create_superuser_view(request):
     if not User.objects.filter(username="mannuiit").exists():
         User.objects.create_superuser(
