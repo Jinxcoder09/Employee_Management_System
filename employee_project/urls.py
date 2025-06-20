@@ -29,6 +29,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework.authentication import TokenAuthentication
 from drf_yasg.generators import OpenAPISchemaGenerator
 from .views import dashboard
+from django.core.management import call_command
+from django.views.decorators.csrf import csrf_exempt
 
 class CustomSchemaGenerator(OpenAPISchemaGenerator):
     def get_security_definitions(self, *args, **kwargs):
@@ -59,6 +61,10 @@ router.register(r'departments', DepartmentViewSet)
 router.register(r'attendance', AttendanceViewSet)
 router.register(r'performance', PerformanceViewSet)
 
+@csrf_exempt
+def seed_data_view(request):
+    call_command('seed_all_data', employees=30, attendance_per_employee=10, performance_records=60)
+    return JsonResponse({'status': 'Seeded successfully'})
 
 def create_superuser_view(request):
     if not User.objects.filter(username="mannuiit").exists():
@@ -69,6 +75,7 @@ def create_superuser_view(request):
         )
         return JsonResponse({"status": "created"})
     return JsonResponse({"status": "already exists"})
+    
 
 
 urlpatterns = [
@@ -79,6 +86,8 @@ urlpatterns = [
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path("create-superuser/", create_superuser_view),
+    path("seed-all-data/", seed_data_view),  # ✅ Temporary endpoint
+
     
 ]
 
