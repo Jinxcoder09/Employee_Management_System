@@ -157,4 +157,5 @@ GitHub: @Jinxcoder09
 
 
 🙌 Support
+
 Found this helpful? Give it a ⭐ on GitHub!
