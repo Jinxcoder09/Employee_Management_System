@@ -156,6 +156,6 @@ Manish Kumar
 GitHub: @Jinxcoder09
 
 
-🙌 Support
+## 🙌 Support
 
 Found this helpful? Give it a ⭐ on GitHub!
